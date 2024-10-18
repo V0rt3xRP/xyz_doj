@@ -1,83 +1,89 @@
-/* Hero Section */
-#hero {
-    background-image: url('https://images.unsplash.com/photo-1543269664-57bb90bbab9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80');
-    background-size: cover;
-    background-position: center;
-    height: 350px;
-    position: relative;
-    text-align: center;
-    color: white;
+/* Main Colors */
+:root {
+    --blue: #003366;
+    --gold: #FFD700;
+    --dark-gray: #333;
+    --light-gray: #f4f4f9;
 }
 
-#hero .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-.hero-content {
-    position: relative;
-    z-index: 2;
-    padding-top: 100px;
-}
-
-.hero-content h1 {
-    font-size: 48px;
-    margin: 0;
-    padding: 0;
-    font-weight: bold;
-}
-
-.hero-content p {
-    font-size: 20px;
-    margin-top: 10px;
-    color: #e0e0e0;
-}
-
-/* Container Styles */
+/* Global Body Styles */
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f4f4f9;
+    background-color: var(--light-gray);
     margin: 0;
     padding: 0;
 }
 
+/* DOJ Header */
+#main-header {
+    display: flex;
+    align-items: center;
+    background-color: var(--blue);
+    color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.logo-container {
+    flex: 0 0 80px;
+}
+
+.logo {
+    width: 80px;
+    height: auto;
+}
+
+.header-title {
+    flex: 1;
+    text-align: left;
+    margin-left: 15px;
+}
+
+.header-title h1 {
+    font-size: 28px;
+    margin: 0;
+    color: var(--gold);
+}
+
+.header-title p {
+    font-size: 16px;
+    margin: 5px 0 0;
+}
+
+/* Main Content */
 .container {
     max-width: 900px;
     margin: 30px auto;
     padding: 20px;
-    background-color: #fff;
+    background-color: white;
+    border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
 }
 
 h2 {
     font-size: 28px;
-    color: #333;
+    color: var(--dark-gray);
     text-align: center;
     margin-bottom: 20px;
 }
 
 p.instruction {
     font-size: 16px;
-    color: #666;
+    color: var(--dark-gray);
     text-align: center;
     margin-bottom: 30px;
 }
 
 .buttons-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
     padding: 10px 0;
 }
 
 /* Fancy Buttons */
 .styled-button {
-    background-color: #007BFF;
+    background-color: var(--blue);
     color: white;
     padding: 15px 20px;
     font-size: 16px;
@@ -89,7 +95,8 @@ p.instruction {
 }
 
 .styled-button:hover {
-    background-color: #0056b3;
+    background-color: var(--gold);
+    color: var(--blue);
     transform: translateY(-4px);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
@@ -111,16 +118,32 @@ p.instruction {
     background-color: #c82333;
 }
 
+/* Footer Styles */
+footer {
+    background-color: var(--blue);
+    color: white;
+    text-align: center;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+footer a {
+    color: var(--gold);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
 /* Canvas Styling */
 canvas {
     border: 1px solid #ccc;
     margin-top: 20px;
-}
-
-/* Footer */
-footer {
-    text-align: center;
-    padding: 10px;
-    margin-top: 30px;
-    color: #888;
 }

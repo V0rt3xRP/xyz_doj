@@ -3,37 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOJ Forms</title>
+    <title>DOJ Forms Repository</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 </head>
 <body>
-    <!-- Hero Section -->
-    <section id="hero">
-        <div class="overlay"></div>
-        <div class="hero-content">
-            <h1>DOJ Forms Repository</h1>
-            <p>Select and preview important forms with ease</p>
+    <!-- DOJ Header -->
+    <header id="main-header">
+        <div class="logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/66/US-DeptOfJustice-Seal.svg" alt="DOJ Logo" class="logo">
         </div>
-    </section>
+        <div class="header-title">
+            <h1>Department of Justice</h1>
+            <p>Forms Repository</p>
+        </div>
+    </header>
 
     <!-- Main Home Page -->
-    <div id="homePage" class="container">
+    <section id="homePage" class="container">
         <h2>Select a DOJ Form</h2>
         <p class="instruction">Select a form to preview:</p>
         <div class="buttons-container" id="pdfList">
             <!-- PDF buttons will go here -->
         </div>
-    </div>
+    </section>
 
     <!-- PDF Preview Page -->
-    <div id="previewPage" class="container" style="display:none;">
+    <section id="previewPage" class="container" style="display:none;">
         <h2>Previewing PDF: <span id="currentPdfName"></span></h2>
         <canvas id="pdfCanvas" width="600" height="800"></canvas>
         <br/>
         <button id="openPdfButton" class="styled-button green">Open PDF in New Tab</button>
         <button id="backButton" class="styled-button red">Back to Home</button>
-    </div>
+    </section>
+
+    <!-- DOJ Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Department of Justice. All rights reserved.</p>
+            <p><a href="#">Privacy Policy</a> | <a href="#">Accessibility</a> | <a href="#">FOIA</a></p>
+        </div>
+    </footer>
 
     <script>
         const pdfFiles = [
