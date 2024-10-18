@@ -6,6 +6,7 @@
     <title>Edit DOJ Forms</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script> <!-- Add PDF-Lib -->
 </head>
 <body>
     <div class="container">
@@ -54,7 +55,9 @@
         const canvas = document.getElementById('pdfCanvas');
         const currentPdfNameSpan = document.getElementById('currentPdfName');
         const pdfEditor = document.getElementById('pdfEditor');
-        let pdfDoc = null;
+        const downloadButton = document.getElementById('downloadPdf');
+        let currentPdfBytes = null;
+        let currentPdfDoc = null;
 
         // Create buttons dynamically for each PDF
         pdfFiles.forEach(pdf => {
@@ -65,17 +68,32 @@
             pdfList.appendChild(button);
         });
 
+        // Open PDF in Editor and prepare for editing
         async function openPdfEditor(pdfFileName) {
             const pdfUrl = pdfFolder + pdfFileName;
             currentPdfNameSpan.innerText = pdfFileName;
             pdfEditor.style.display = 'block';
+            downloadButton.style.display = 'none';
 
-            const loadingTask = pdfjsLib.getDocument(pdfUrl);
+            // Fetch the PDF file
+            currentPdfBytes = await fetch(pdfUrl).then(res => res.arrayBuffer());
+            
+            // Load the PDF using PDF-Lib for editing
+            currentPdfDoc = await PDFLib.PDFDocument.load(currentPdfBytes);
+            const pages = currentPdfDoc.getPages();
+            const firstPage = pages[0]; // Example: editing the first page
+
+            // Add an example field if a form exists (you can customize this for real fields)
+            const form = currentPdfDoc.getForm();
+            const textField = form.getTextField('Name'); // Replace 'Name' with the actual field name if available
+            if (textField) {
+                textField.setText('John Doe'); // Example fill
+            }
+
+            // Render the first page using PDF.js for a visual preview (optional)
+            const loadingTask = pdfjsLib.getDocument({ data: currentPdfBytes });
             loadingTask.promise.then(function(pdf) {
-                console.log('PDF loaded:', pdfUrl);
-                // Fetch the first page
                 pdf.getPage(1).then(function(page) {
-                    console.log('Page loaded');
                     const scale = 1.5;
                     const viewport = page.getViewport({ scale: scale });
 
@@ -92,12 +110,25 @@
                     page.render(renderContext).promise.then(function() {
                         console.log('Page rendered');
                     });
-                }).catch(error => {
-                    console.error('Error loading page:', error);
                 });
-            }).catch(error => {
-                console.error('Error loading PDF:', error);
             });
+
+            // Show download button after rendering
+            downloadButton.style.display = 'inline-block';
+            downloadButton.onclick = () => downloadEditedPdf(pdfFileName);
+        }
+
+        // Download the edited PDF
+        async function downloadEditedPdf(pdfFileName) {
+            const editedPdfBytes = await currentPdfDoc.save(); // Save the modified PDF
+
+            // Create a Blob for downloading
+            const blob = new Blob([editedPdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `edited-${pdfFileName}`;
+            a.click();
         }
     </script>
 </body>
