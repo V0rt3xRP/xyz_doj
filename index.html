@@ -92,17 +92,25 @@
             
             // Load the PDF using PDF-Lib for editing
             currentPdfDoc = await PDFLib.PDFDocument.load(currentPdfBytes);
-            const pages = currentPdfDoc.getPages();
-            const firstPage = pages[0]; // Example: editing the first page
-
-            // Example: Add field editing (adjust based on real fields in your PDF)
             const form = currentPdfDoc.getForm();
+
+            // List all available fields in the console
+            const fields = form.getFields();
+            fields.forEach(field => {
+                const type = field.constructor.name;
+                const name = field.getName();
+                console.log(`${type}: ${name}`);
+            });
+
+            // Check if a specific field exists (example: Name field)
             const textField = form.getTextField('Name'); // Replace 'Name' with actual field name
             if (textField) {
                 textField.setText('John Doe'); // Example fill
+            } else {
+                console.log("No 'Name' field found.");
             }
 
-            // Render the first page using PDF.js for a visual preview (optional)
+            // Render the first page using PDF.js for a visual preview
             const loadingTask = pdfjsLib.getDocument({ data: currentPdfBytes });
             loadingTask.promise.then(function(pdf) {
                 pdf.getPage(1).then(function(page) {
