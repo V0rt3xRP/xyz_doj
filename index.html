@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editable DOJ Forms</title>
+    <title>Edit DOJ Forms</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Editable DOJ Forms</h1>
-        <p>Select a form to edit:</p>
+        <h1>Edit DOJ Forms</h1>
+        <p>Select a form to open and edit:</p>
         <div class="buttons-container" id="pdfList">
-            <!-- Buttons for PDFs will be dynamically added here -->
+            <!-- PDF buttons will go here -->
         </div>
 
-        <canvas id="pdfCanvas" width="600" height="800" style="display:none;"></canvas>
-        <br/>
-        <a href="#" class="button" id="downloadPdf" style="display:none;">Download Completed Form</a>
+        <div id="pdfEditor" style="display:none;">
+            <h2>Editing PDF: <span id="currentPdfName"></span></h2>
+            <canvas id="pdfCanvas" width="600" height="800"></canvas>
+            <br/>
+            <button id="downloadPdf" style="display:none;">Download Edited PDF</button>
+        </div>
     </div>
 
     <script>
-        // List of PDFs in the ./pdfs folder based on the image you provided
         const pdfFiles = [
-            'Answer to Complaint.pdf', 
+            'Answer to Complaint.pdf',
             'Appearance.pdf',
             'Application for a Search Warrant.pdf',
             'Appointment of Counsel.pdf',
@@ -48,48 +50,54 @@
         ];
 
         const pdfFolder = './pdfs/';
-        
         const pdfList = document.getElementById('pdfList');
         const canvas = document.getElementById('pdfCanvas');
-        const downloadLink = document.getElementById('downloadPdf');
+        const currentPdfNameSpan = document.getElementById('currentPdfName');
+        const pdfEditor = document.getElementById('pdfEditor');
+        let pdfDoc = null;
 
-        // Generate buttons for each PDF
+        // Create buttons dynamically for each PDF
         pdfFiles.forEach(pdf => {
-            const button = document.createElement('a');
-            button.className = 'button';
-            button.innerText = pdf.replace('.pdf', ''); // Display the name without .pdf extension
-            button.href = '#';
-            button.onclick = () => loadAndEditPDF(pdf);
+            const button = document.createElement('button');
+            button.innerText = pdf.replace('.pdf', ''); // Button text without '.pdf'
+            button.className = 'pdf-button';
+            button.onclick = () => openPdfEditor(pdf);
             pdfList.appendChild(button);
         });
 
-        async function loadAndEditPDF(pdfFileName) {
+        async function openPdfEditor(pdfFileName) {
             const pdfUrl = pdfFolder + pdfFileName;
+            currentPdfNameSpan.innerText = pdfFileName;
+            pdfEditor.style.display = 'block';
 
-            // Fetch and load the selected PDF
-            const existingPdfBytes = await fetch(pdfUrl).then(res => res.arrayBuffer());
+            const loadingTask = pdfjsLib.getDocument(pdfUrl);
+            loadingTask.promise.then(function(pdf) {
+                console.log('PDF loaded:', pdfUrl);
+                // Fetch the first page
+                pdf.getPage(1).then(function(page) {
+                    console.log('Page loaded');
+                    const scale = 1.5;
+                    const viewport = page.getViewport({ scale: scale });
 
-            const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
-            const form = pdfDoc.getForm();
+                    // Prepare canvas using PDF page dimensions
+                    const canvasContext = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
 
-            // Example: Fill a field if available (update field name as per your PDFs)
-            const textField = form.getTextField('Name'); // Replace 'Name' with actual field names if they exist
-            if (textField) {
-                textField.setText('John Doe'); // Example pre-fill
-            }
-
-            // Render the PDF on the canvas (just for display)
-            const pdfBytes = await pdfDoc.save();
-            const ctx = canvas.getContext('2d');
-            const image = new Image();
-            image.src = URL.createObjectURL(new Blob([pdfBytes]));
-            image.onload = () => ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-            // Display canvas and download button
-            canvas.style.display = 'block';
-            downloadLink.style.display = 'block';
-            downloadLink.href = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
-            downloadLink.download = 'edited-' + pdfFileName;
+                    // Render PDF page into canvas context
+                    const renderContext = {
+                        canvasContext: canvasContext,
+                        viewport: viewport
+                    };
+                    page.render(renderContext).promise.then(function() {
+                        console.log('Page rendered');
+                    });
+                }).catch(error => {
+                    console.error('Error loading page:', error);
+                });
+            }).catch(error => {
+                console.error('Error loading PDF:', error);
+            });
         }
     </script>
 </body>
