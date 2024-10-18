@@ -6,22 +6,31 @@
     <title>Edit DOJ Forms</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script> <!-- Add PDF-Lib -->
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Edit DOJ Forms</h1>
+    <!-- Main Home Page -->
+    <div id="homePage" class="container">
+        <header>
+            <h1>Select a DOJ Form</h1>
+        </header>
+
         <p>Select a form to open and edit:</p>
         <div class="buttons-container" id="pdfList">
             <!-- PDF buttons will go here -->
         </div>
+    </div>
 
-        <div id="pdfEditor" style="display:none;">
-            <h2>Editing PDF: <span id="currentPdfName"></span></h2>
-            <canvas id="pdfCanvas" width="600" height="800"></canvas>
-            <br/>
-            <button id="downloadPdf" style="display:none;">Download Edited PDF</button>
-        </div>
+    <!-- PDF Editor Page -->
+    <div id="editorPage" class="container" style="display:none;">
+        <header>
+            <h1>Editing PDF: <span id="currentPdfName"></span></h1>
+        </header>
+
+        <canvas id="pdfCanvas" width="600" height="800"></canvas>
+        <br/>
+        <button id="downloadPdf" style="display:none;" class="styled-button green">Download Edited PDF</button>
+        <button id="backButton" class="styled-button red">Back to Home</button>
     </div>
 
     <script>
@@ -54,8 +63,10 @@
         const pdfList = document.getElementById('pdfList');
         const canvas = document.getElementById('pdfCanvas');
         const currentPdfNameSpan = document.getElementById('currentPdfName');
-        const pdfEditor = document.getElementById('pdfEditor');
         const downloadButton = document.getElementById('downloadPdf');
+        const homePage = document.getElementById('homePage');
+        const editorPage = document.getElementById('editorPage');
+        const backButton = document.getElementById('backButton');
         let currentPdfBytes = null;
         let currentPdfDoc = null;
 
@@ -63,7 +74,7 @@
         pdfFiles.forEach(pdf => {
             const button = document.createElement('button');
             button.innerText = pdf.replace('.pdf', ''); // Button text without '.pdf'
-            button.className = 'pdf-button';
+            button.className = 'styled-button';
             button.onclick = () => openPdfEditor(pdf);
             pdfList.appendChild(button);
         });
@@ -72,7 +83,8 @@
         async function openPdfEditor(pdfFileName) {
             const pdfUrl = pdfFolder + pdfFileName;
             currentPdfNameSpan.innerText = pdfFileName;
-            pdfEditor.style.display = 'block';
+            homePage.style.display = 'none';
+            editorPage.style.display = 'block';
             downloadButton.style.display = 'none';
 
             // Fetch the PDF file
@@ -83,9 +95,9 @@
             const pages = currentPdfDoc.getPages();
             const firstPage = pages[0]; // Example: editing the first page
 
-            // Add an example field if a form exists (you can customize this for real fields)
+            // Example: Add field editing (adjust based on real fields in your PDF)
             const form = currentPdfDoc.getForm();
-            const textField = form.getTextField('Name'); // Replace 'Name' with the actual field name if available
+            const textField = form.getTextField('Name'); // Replace 'Name' with actual field name
             if (textField) {
                 textField.setText('John Doe'); // Example fill
             }
@@ -130,6 +142,12 @@
             a.download = `edited-${pdfFileName}`;
             a.click();
         }
+
+        // Go back to home page
+        backButton.onclick = () => {
+            editorPage.style.display = 'none';
+            homePage.style.display = 'block';
+        };
     </script>
 </body>
 </html>
