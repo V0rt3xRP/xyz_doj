@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editable DOJ Forms</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Editable DOJ Forms</h1>
+        <p>Select a form to edit:</p>
+        <div class="buttons-container" id="pdfList">
+            <!-- Buttons for PDFs will be dynamically added here -->
+        </div>
+
+        <canvas id="pdfCanvas" width="600" height="800" style="display:none;"></canvas>
+        <br/>
+        <a href="#" class="button" id="downloadPdf" style="display:none;">Download Completed Form</a>
+    </div>
+
+    <script>
+        // List of PDFs in the ./pdfs folder based on the image you provided
+        const pdfFiles = [
+            'Answer to Complaint.pdf', 
+            'Appearance.pdf',
+            'Application for a Search Warrant.pdf',
+            'Appointment of Counsel.pdf',
+            'Arrest Warrant.pdf',
+            'Civil Complaint.pdf',
+            'Court Response to Motion.pdf',
+            'Criminal Complaint.pdf',
+            'Judgement in a Civil Action.pdf',
+            'Motion for Contempt.pdf',
+            'Motion for Enlargement of Time.pdf',
+            'Motion to Dismiss.pdf',
+            'Motion to Reconsider.pdf',
+            'Name Change Request.pdf',
+            'Notice of Suit.pdf',
+            'Pre Filing.pdf',
+            'Response to Motion.pdf',
+            'Search and Seizure Warrant.pdf',
+            'Subpoena Discovery.pdf',
+            'Subpoena to Testify at Criminal.pdf',
+            'Subpoena to Testify.pdf',
+            'Substitution of Attorney.pdf'
+        ];
+
+        const pdfFolder = './pdfs/';
+        
+        const pdfList = document.getElementById('pdfList');
+        const canvas = document.getElementById('pdfCanvas');
+        const downloadLink = document.getElementById('downloadPdf');
+
+        // Generate buttons for each PDF
+        pdfFiles.forEach(pdf => {
+            const button = document.createElement('a');
+            button.className = 'button';
+            button.innerText = pdf.replace('.pdf', ''); // Display the name without .pdf extension
+            button.href = '#';
+            button.onclick = () => loadAndEditPDF(pdf);
+            pdfList.appendChild(button);
+        });
+
+        async function loadAndEditPDF(pdfFileName) {
+            const pdfUrl = pdfFolder + pdfFileName;
+
+            // Fetch and load the selected PDF
+            const existingPdfBytes = await fetch(pdfUrl).then(res => res.arrayBuffer());
+
+            const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+            const form = pdfDoc.getForm();
+
+            // Example: Fill a field if available (update field name as per your PDFs)
+            const textField = form.getTextField('Name'); // Replace 'Name' with actual field names if they exist
+            if (textField) {
+                textField.setText('John Doe'); // Example pre-fill
+            }
+
+            // Render the PDF on the canvas (just for display)
+            const pdfBytes = await pdfDoc.save();
+            const ctx = canvas.getContext('2d');
+            const image = new Image();
+            image.src = URL.createObjectURL(new Blob([pdfBytes]));
+            image.onload = () => ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+            // Display canvas and download button
+            canvas.style.display = 'block';
+            downloadLink.style.display = 'block';
+            downloadLink.href = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }));
+            downloadLink.download = 'edited-' + pdfFileName;
+        }
+    </script>
+</body>
+</html>
