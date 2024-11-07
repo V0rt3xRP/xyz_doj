@@ -1,9 +1,11 @@
 // script.js
 
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwBn4JH6hLWcltasuYkQzI8n-7Atdoy607Ns_r6kdlu1CNxnFZnJ5pPg2NP6qeiMGAh/exec'; // Replace with your Google Apps Script URL
+const scriptURL = 'https://script.google.com/macros/s/AKfycbwZXF5UtZx32TAJQVJt5rtqbDduSrCMJLtAT3C3yBM/dev'; // Replace with your Google Apps Script URL
 
 async function submitForm(event) {
     event.preventDefault();
+
+    console.log("Form submitted");
 
     const form = document.getElementById('contactForm');
     const formData = new FormData(form);
@@ -14,13 +16,16 @@ async function submitForm(event) {
         message: formData.get('message')
     };
 
+    console.log("Data to be sent:", data);
+
     try {
         const response = await fetch(scriptURL, {
             method: 'POST',
-            mode: 'cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
+
+        console.log("Response received:", response);
 
         const result = await response.json();
         if (result.result === 'success') {
@@ -34,3 +39,4 @@ async function submitForm(event) {
         alert('An error occurred. Please try again.');
     }
 }
+
