@@ -22,8 +22,10 @@ async function submitForm(event) {
         const response = await fetch(scriptURL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            mode: 'no-cors' // Add this line to bypass CORS (with limited response handling)
         });
+        
 
         console.log("Response received:", response);
 
