@@ -1,5 +1,5 @@
 // Replace with your actual Google Apps Script Web App URL
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzJojTQb_phi-8NmAmZKTLFhK9O6g3_gwWML4UWX9ABLa8x4F4l6DrYIsVNfYWjByeW/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbzM4vezxbeHJhqA3lNA-SK_ykyCCndqGkL_wKs0mW-DbRInDl4MVgLqsR10VhPUxHc-/exec';
 
 async function submitForm(event) {
     event.preventDefault();
