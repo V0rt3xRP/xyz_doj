@@ -9,7 +9,7 @@ async function submitForm(event) {
 
     const data = {
         name: formData.get('name'),
-        email: formData.get('email'),
+        phone: formData.get('phone'), // Added phone field
         message: formData.get('message')
     };
 
@@ -18,10 +18,9 @@ async function submitForm(event) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
-            mode: 'no-cors' // Bypasses CORS restrictions but limits response handling
+            mode: 'no-cors'
         });
 
-        // Since 'no-cors' mode limits access to the response, we won't be able to handle the response here.
         alert('Message submitted successfully!');
         form.reset();
     } catch (error) {
@@ -29,3 +28,4 @@ async function submitForm(event) {
         alert('An error occurred. Please try again.');
     }
 }
+
