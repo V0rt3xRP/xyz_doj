@@ -3,116 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOJ Forms Repository</title>
+    <title>DOJ Department</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 </head>
 <body>
-    <!-- Main Home Page -->
-    <section id="homePage" class="container">
-        <h2>Select a Form to Preview</h2>
-        <p class="instruction">Choose a form from the list below to view a preview and open it.</p>
-        <div class="buttons-container" id="pdfList">
-            <!-- PDF buttons will go here -->
+
+    <!-- Header Section -->
+    <header>
+        <div class="logo">DOJ Department</div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#resources">Resources</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1>Welcome to the DOJ Department</h1>
+        <p>Your trusted resource for justice and legal support.</p>
+        <a href="#about" class="cta-button">Learn More</a>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="about">
+        <h2>About Us</h2>
+        <p>Our mission is to uphold justice and support the community. Our team is committed to providing fair and accessible services to all.</p>
+        <div class="team">
+            <div class="team-member">
+                <img src="team1.jpg" alt="Team Member">
+                <h3>John Doe</h3>
+                <p>Director</p>
+            </div>
+            <div class="team-member">
+                <img src="team2.jpg" alt="Team Member">
+                <h3>Jane Smith</h3>
+                <p>Deputy Director</p>
+            </div>
         </div>
     </section>
 
-    <!-- PDF Preview Page -->
-    <section id="previewPage" class="container" style="display:none;">
-        <h2>Previewing: <span id="currentPdfName"></span></h2>
-        <canvas id="pdfCanvas" width="600" height="800"></canvas>
-        <br/>
-        <div class="button-group">
-            <button id="openPdfButton" class="button primary-button">Open PDF in New Tab</button>
-            <button id="backButton" class="button secondary-button">Back to Home</button>
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <h2>Our Services</h2>
+        <div class="service-item">
+            <h3>Legal Assistance</h3>
+            <p>We provide legal guidance and support for the community.</p>
+        </div>
+        <div class="service-item">
+            <h3>Victim Support</h3>
+            <p>Resources and assistance for crime victims.</p>
+        </div>
+        <div class="service-item">
+            <h3>Community Programs</h3>
+            <p>Programs aimed at fostering a safer and stronger community.</p>
         </div>
     </section>
 
-    <script>
-        const pdfFiles = [
-            'Appearance.pdf',
-            'Application for a Search Warrant.pdf',
-            'Appointment of Counsel.pdf',
-            'Arrest Warrant.pdf',
-            'Civil Complaint.pdf',
-            'Court Response to Motion.pdf',
-            'Criminal Complaint.pdf',
-            'Judgement in a Civil Action.pdf',
-            'Motion for Contempt.pdf',
-            'Motion for Enlargement of Time.pdf',
-            'Motion to Dismiss.pdf',
-            'Motion to Reconsider.pdf',
-            'Name Change Request.pdf',
-            'Notice of Suit.pdf',
-            'Pre Filing.pdf',
-            'Response to Motion.pdf',
-            'Search and Seizure Warrant.pdf',
-            'Subpoena Discovery.pdf',
-            'Subpoena to Testify at Criminal.pdf',
-            'Subpoena to Testify.pdf',
-            'Substitution of Attorney.pdf'
-        ];
+    <!-- Resources Section -->
+    <section id="resources" class="resources">
+        <h2>Resources</h2>
+        <ul>
+            <li><a href="#">Legal Forms</a></li>
+            <li><a href="#">Guides</a></li>
+            <li><a href="#">FAQs</a></li>
+        </ul>
+    </section>
 
-        const pdfFolder = './pdfs/';
-        const pdfList = document.getElementById('pdfList');
-        const canvas = document.getElementById('pdfCanvas');
-        const currentPdfNameSpan = document.getElementById('currentPdfName');
-        const homePage = document.getElementById('homePage');
-        const previewPage = document.getElementById('previewPage');
-        const openPdfButton = document.getElementById('openPdfButton');
-        const backButton = document.getElementById('backButton');
-        let currentPdfUrl = null;
+    <!-- Contact Us Section -->
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <form id="contactForm" onsubmit="submitForm(event)">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
 
-        // Create buttons dynamically for each PDF
-        pdfFiles.forEach(pdf => {
-            const button = document.createElement('button');
-            button.innerText = pdf.replace('.pdf', ''); // Button text without '.pdf'
-            button.className = 'button file-button';
-            button.onclick = () => showPdfPreview(pdf);
-            pdfList.appendChild(button);
-        });
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
 
-        // Show PDF Preview
-        async function showPdfPreview(pdfFileName) {
-            currentPdfUrl = pdfFolder + pdfFileName;
-            currentPdfNameSpan.innerText = pdfFileName;
-            homePage.style.display = 'none';
-            previewPage.style.display = 'block';
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
 
-            // Fetch and render the first page of the PDF using PDF.js
-            const loadingTask = pdfjsLib.getDocument(currentPdfUrl);
-            loadingTask.promise.then(function(pdf) {
-                pdf.getPage(1).then(function(page) {
-                    const scale = 1.5;
-                    const viewport = page.getViewport({ scale: scale });
+            <button type="submit">Submit</button>
+        </form>
+        <p>Phone: (123) 456-7890</p>
+        <p>Email: info@dojdepartment.gov</p>
+    </section>
 
-                    // Prepare canvas using PDF page dimensions
-                    const canvasContext = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
+    <!-- Link to external JavaScript file -->
+    <script src="script.js"></script>
 
-                    // Render PDF page into canvas context
-                    const renderContext = {
-                        canvasContext: canvasContext,
-                        viewport: viewport
-                    };
-                    page.render(renderContext).promise.then(function() {
-                        console.log('Page rendered');
-                    });
-                });
-            });
-        }
 
-        // Open the PDF in a new tab
-        openPdfButton.onclick = () => {
-            window.open(currentPdfUrl, '_blank');
-        };
-
-        // Go back to home page
-        backButton.onclick = () => {
-            previewPage.style.display = 'none';
-            homePage.style.display = 'block';
-        };
-    </script>
 </body>
 </html>
