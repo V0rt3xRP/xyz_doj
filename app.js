@@ -1,15 +1,12 @@
-require('dotenv').config();
-
-
 // Firebase configuration (replace with your actual Firebase config values)
 const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.FIREBASE_APP_ID,
-    measurementId: process.env.FIREBASE_MEASUREMENT_ID
+    apiKey: "AIzaSyD7GGnzUOhzdtfkG4On1CY3ACa4rMF1Xag",
+    authDomain: "doj-forums.firebaseapp.com",
+    projectId: "doj-forums",
+    storageBucket: "doj-forums.firebasestorage.app",
+    messagingSenderId: "160810119528",
+    appId: "1:160810119528:web:2684720d62260ee38de6dd",
+    measurementId: "G-VBZ4TF80YB"
   };
 
 // Initialize Firebase
