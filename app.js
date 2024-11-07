@@ -13,27 +13,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
-// Update the login/logout button based on login status
-auth.onAuthStateChanged((user) => {
-    const authButton = document.getElementById("authButton");
-    if (user) {
-        authButton.textContent = "Logout";
-    } else {
-        authButton.textContent = "Login";
-    }
-});
-
-// Handle login/logout button click
+// Define handleAuthButtonClick after Firebase and auth are initialized
 function handleAuthButtonClick() {
     const user = auth.currentUser;
     if (user) {
-        // If the user is logged in, log them out
         auth.signOut().then(() => {
             alert("You have been logged out.");
             window.location.href = "index.html";
+        }).catch(error => {
+            console.error("Error logging out:", error);
         });
     } else {
-        // If the user is not logged in, redirect to the login page
         window.location.href = "login.html";
     }
 }
