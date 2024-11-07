@@ -1,0 +1,17 @@
+﻿# Sensitive Firebase Service Account Key
+serviceAccountKey.json
+
+# Node.js modules (if you’re using Node.js locally)
+node_modules/
+
+# Firebase Config in Client-side Code
+.env
+
+# OS-specific files (optional but good practice)
+.DS_Store   # macOS
+Thumbs.db   # Windows
+
+# Ignore IDE and Editor-specific files (optional)
+.vscode/
+.idea/
+
