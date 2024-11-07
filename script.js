@@ -1,6 +1,6 @@
 // script.js
 
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwhoZReGbKAexaG_toh1iYg7moEHcz4ZRiIfDgaosWVzBRkxWtNY_GkHM00f-KrXJi5/exec'; // Replace with your Google Apps Script URL
+const scriptURL = 'https://script.google.com/macros/s/AKfycbwBn4JH6hLWcltasuYkQzI8n-7Atdoy607Ns_r6kdlu1CNxnFZnJ5pPg2NP6qeiMGAh/exec'; // Replace with your Google Apps Script URL
 
 async function submitForm(event) {
     event.preventDefault();
