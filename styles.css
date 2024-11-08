@@ -266,3 +266,39 @@ body.login-page {
     font-size: 0.9em;
     text-align: center;
 }
+
+/* Posts Section */
+.posts-section {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+}
+
+.post {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.post h3 {
+    color: #003366;
+    margin-bottom: 10px;
+}
+
+.post p {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.post small {
+    display: block;
+    text-align: right;
+    color: #666;
+    font-size: 0.9em;
+}
+

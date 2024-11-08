@@ -48,6 +48,12 @@
         </div>
     </section>
 
+    <!-- Latest Posts Section -->
+    <section id="posts" class="posts-section">
+        <h2>Latest Posts</h2>
+        <div id="postContainer">Loading posts...</div> <!-- Container for dynamically loaded posts -->
+    </section>
+
     <!-- Services Section -->
     <section id="services" class="services">
         <h2>Our Services</h2>
@@ -94,8 +100,14 @@
         <p>Email: info@dojdepartment.gov</p>
     </section>
 
+    <!-- Firebase SDKs and JavaScript -->
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
     <script src="app.js"></script>
+    <script>
+        // Load posts after the DOM is ready
+        document.addEventListener('DOMContentLoaded', loadPosts);
+    </script>
 </body>
 </html>

@@ -12,23 +12,48 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db = firebase.firestore();
 
-// Define handleAuthButtonClick after Firebase and auth are initialized
-function handleAuthButtonClick() {
-    const user = auth.currentUser;
-    if (user) {
-        auth.signOut().then(() => {
-            alert("You have been logged out.");
-            window.location.href = "index.html";
-        }).catch(error => {
-            console.error("Error logging out:", error);
+// Load posts from Firestore and display them
+async function loadPosts() {
+    const postContainer = document.getElementById('postContainer');
+
+    // Check if postContainer exists to avoid the "null" error
+    if (!postContainer) {
+        console.error("postContainer element not found in the DOM.");
+        return;
+    }
+
+    postContainer.innerHTML = ''; // Clear any existing content
+
+    try {
+        const snapshot = await db.collection('posts').orderBy('date', 'desc').get();
+
+        // Check if the collection is empty
+        if (snapshot.empty) {
+            postContainer.innerHTML = '<p>No posts found.</p>';
+            return;
+        }
+
+        snapshot.forEach(doc => {
+            const post = doc.data();
+            const postElement = document.createElement('div');
+            postElement.classList.add('post');
+
+            postElement.innerHTML = `
+                <h3>${post.title}</h3>
+                <p>${post.content}</p>
+                <small>${post.date?.toDate().toLocaleDateString()}</small>
+            `;
+            postContainer.appendChild(postElement);
         });
-    } else {
-        window.location.href = "login.html";
+    } catch (error) {
+        console.error("Error loading posts:", error);
+        postContainer.innerHTML = '<p>Failed to load posts. Check console for details.</p>';
     }
 }
 
-// Login function for login.html
+// Login and role-based redirection for login.html
 async function login(event) {
     event.preventDefault();
 
@@ -40,15 +65,21 @@ async function login(event) {
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
+        // Force a token refresh to get the latest custom claims
+        await user.getIdToken(true);
+
         // Retrieve custom claims (role) for the user
         const token = await user.getIdTokenResult();
         const role = token.claims.role;
 
-        // Redirect based on role
+        console.log("User role:", role); // Debugging line
+
         if (role === "pd") {
             window.location.href = "pd-dashboard.html";
         } else if (role === "dmv") {
             window.location.href = "dmv-dashboard.html";
+        } else if (role === "admin") {
+            window.location.href = "admin.html";
         } else {
             messageDiv.innerText = "Unauthorized access.";
             auth.signOut();
@@ -59,35 +90,18 @@ async function login(event) {
     }
 }
 
-
-// Form submission (replace scriptURL with your Google Apps Script URL)
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzM4vezxbeHJhqA3lNA-SK_ykyCCndqGkL_wKs0mW-DbRInDl4MVgLqsR10VhPUxHc-/exec';
-
-async function submitForm(event) {
-    event.preventDefault();
-
-    const form = document.getElementById('contactForm');
-    const formData = new FormData(form);
-
-    const data = {
-        name: formData.get('name'),
-        phone: formData.get('phone'),
-        message: formData.get('message')
-    };
-
-    try {
-        const response = await fetch(scriptURL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-            mode: 'no-cors'
+// Handle authentication button click for login/logout
+function handleAuthButtonClick() {
+    const user = auth.currentUser;
+    if (user) {
+        auth.signOut().then(() => {
+            alert("You have been logged out.");
+            window.location.href = "index.html";
+        }).catch(error => {
+            console.error("Error logging out:", error);
         });
-
-        alert('Message submitted successfully!');
-        form.reset();
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
+    } else {
+        window.location.href = "login.html";
     }
 }
 
